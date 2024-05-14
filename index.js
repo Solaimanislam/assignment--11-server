@@ -113,6 +113,40 @@ async function run() {
             res.send(result);
         })
 
+        // get all book for a user by email from db
+
+        app.get('/my-book/:email', async (req, res) => {
+            // console.log(req.params.email);
+            const email = req.params.email;
+            const query = {email}
+            const result = await bookingCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // get all bid request from db for job owner
+
+        app.get('/service-do/:email', async (req, res) => {
+            // console.log(req.params.email);
+            const email = req.params.email;
+            const query = {'uEmail' : email}
+            const result = await bookingCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // update book status
+
+        app.patch('/book/:id', async (req, res) => {
+            const id = req.params.id;
+            const status = req.body
+            const query = { _id:new ObjectId(id)}
+            const updateDoc = {
+                $set: status,
+            }
+            const result = await bookingCollection.updateOne(query, updateDoc)
+            res.send(result)
+        })
+
+
         // get all service data from db
         // app.get('/service', async(req, res) => {
         //     const result = await serviceCollection.find()
