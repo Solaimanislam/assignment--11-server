@@ -37,6 +37,7 @@ async function run() {
         // await client.connect();
 
         const serviceCollection = client.db('homeService').collection('services');
+        const bookingCollection = client.db('homeService').collection('booked');
 
         app.get('/services', async (req, res) => {
             const cursor = serviceCollection.find();
@@ -103,8 +104,13 @@ async function run() {
         })
 
 
-        app.get('/services/:email', (req, res) => {
+        // save a book data in db
 
+        app.post('/booked', async(req, res) => {
+            const bookData = req.body
+            
+            const result = await bookingCollection.insertOne(bookData);
+            res.send(result);
         })
 
         // get all service data from db
