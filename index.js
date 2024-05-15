@@ -147,12 +147,39 @@ async function run() {
         })
 
 
-        // get all service data from db
-        // app.get('/service', async(req, res) => {
-        //     const result = await serviceCollection.find()
+        // get all service data from db for pagination
 
-        //     res.send(result);
-        // })
+        app.get('/all-service', async(req, res) => {
+            const size = parseInt(req.query.size);
+            const page = parseInt(req.query.page)-1;
+            // const filter = req.query.filter;
+            const search = req.query.search;
+            console.log(size, page);
+
+            let query = {
+                name: { $regex : search, $option: 'i' },
+                
+            }
+            // if(filter) query.category = filter
+            
+            const result = await serviceCollection.find().skip(page * size).limit(size).toArray()
+            res.send(result);
+        })
+        // get all service data count from db
+
+        app.get('/service-count', async(req, res) => {
+            // const filter = req.query.filter
+            const search = req.query.search;
+            let query = {
+                name: { $regex : search, $option: 'i' },
+                
+            }
+            // if(filter) query.category = filter
+
+            const count = await serviceCollection.countDocuments()
+
+            res.send({count});
+        })
 
 
 
